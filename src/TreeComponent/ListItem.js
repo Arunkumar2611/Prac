@@ -1,7 +1,7 @@
 import React from "react";
 
 export default function ListItem(props) {
-  const { item, level, handleClick } = props;
+  const { item, level, handleClick, recursiveRemove } = props;
   console.log("%cInside Listitem", "color: purple", item);
   return (
     <article
@@ -18,6 +18,7 @@ export default function ListItem(props) {
             parent: item.name || null,
 
           })}>Click</button>
+      <button onClick={() => recursiveRemove(item.name)}>Remove</button>
       <h5>Name: {item.name}</h5>
       <h5>Parent: {item.parent}</h5>
       <h5>Level: {level}</h5>

@@ -4,7 +4,7 @@ import Form from './Form';
 import { findNodeOriginal } from './Helpers/findNodeOriginal';
 
 const MainApp = () => {
-    const [newData, setNewData] = React.useState([]);
+    const [newData, setNewData] = React.useState([]); 
     const [newDataaa, setNewDataaa] = React.useState([]);
 
     function handleSubmitOriginal(event, incoming) {
@@ -56,12 +56,28 @@ const MainApp = () => {
         }
       }
 
+      const removeFunc = (name, arr) => {
+        console.log("*****************name",name, "****************Arr", arr)
+        return  arr
+          .filter((el) => el.name !== name)
+          .map((el) => {
+            if (!el.children || !Array.isArray(el.children)) return el;
+            el.children = removeFunc(name, el.children);
+            return el;
+          });
+      }
+
+      const recursiveRemove = (name) => {
+        const result = removeFunc(name, newDataaa);
+        setNewDataaa(result)
+      } 
+
 console.log("newData", newData, newDataaa);
     return (
         <div>
             <h1>Tree</h1>
             <Form handleSubmit={handleSubmitOriginal} />        
-            <TreeDynamicData dynamicData={newData} handleClick={handleClick} />
+            <TreeDynamicData dynamicData={newData} handleClick={handleClick} recursiveRemove={recursiveRemove} />
 
         </div>
     )
