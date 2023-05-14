@@ -4,22 +4,24 @@ import { Box, Select, MenuItem, Stack, Button, IconButton } from "@mui/material"
 import DeleteIcon from "@mui/icons-material/Delete";
 
 
-export const Module = ({ obj, setObj }) => {
+export const Module = ({ obj, setObj, level, arr, ping }) => {
     const [component, setComponent] = useState([]);
     const [addFact, setAddFact] = useState([
         { optionVal: "", operatorVal: "", valText: "" }
     ]);
 
-    const [subrule, setSubRule] = useState([{ logical: "AND" }]);
+    const [subrule, setSubRule] = useState({ logical: "AND" });
 
 
     const handleAddFact = (e) => {
         setAddFact([...addFact, { optionVal: "", operatorVal: "", valText: "" }]);
     };
 
-    const handleClick = () => {
-        setObj([...obj, addFact]);
-        setComponent([...component, <Module obj={obj} setObj={setObj} />]);
+    const handleAddSubRuleClick = () => {
+        ping()
+        arr.push(<Module obj={obj} setObj={setObj} level={level+1} arr={arr} ping={ping} />)
+        setObj([...obj, level]);
+        setComponent([...component, <Module key={level} obj={obj} setObj={setObj} level={level+1} arr={arr} ping={ping} />]);
     };
 
     const handleLogicalChange = (event, i) => {
@@ -40,7 +42,7 @@ export const Module = ({ obj, setObj }) => {
 
     console.log("compome", component)
     // console.log("Input Field", inputFields)
-    // console.log("Object nested", obj);
+    console.log("Object nested", arr);
 
     return (
         <div
@@ -64,7 +66,7 @@ export const Module = ({ obj, setObj }) => {
                 <Button variant="contained" onClick={(e) => handleAddFact(e)}>
                     Fact
                 </Button>
-                <Button variant="contained" onClick={handleClick}>
+                <Button variant="contained" onClick={handleAddSubRuleClick}>
                     + Sub Rule
                 </Button>
                 <IconButton
@@ -74,11 +76,16 @@ export const Module = ({ obj, setObj }) => {
                     <DeleteIcon />
                 </IconButton>
             </Stack>
+            level: {level}
                 {component.map((item, index) => (
-                    <Box key={index}>{item}</Box>
+                    <Box key={index}>
+                        <h3>{index}</h3>
+                        
+                        {item}
+                    </Box>
                 ))}
 
-            <Box sx={{ mt: 2 }}>
+            {/* <Box sx={{ mt: 2 }}>
                 {addFact.map((fact, index) => (
                     <Input
                         fact={fact}
@@ -87,7 +94,7 @@ export const Module = ({ obj, setObj }) => {
                         setAddFact={setAddFact}
                     />
                 ))}
-            </Box>
+            </Box> */}
         </div>
     );
 };
