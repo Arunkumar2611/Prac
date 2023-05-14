@@ -1,7 +1,7 @@
 import React from "react";
 
 export default function Form(props) {
-  const { handleSubmit } = props;
+  const { handleSubmit, level=0 } = props;
 
   const [newName, setNewName] = React.useState("");
   const [parent, setParent] = React.useState("");
@@ -12,7 +12,8 @@ export default function Form(props) {
         handleSubmit(e, {
           name: newName,
           children: [],
-          parent: parent || null
+          parent: parent || null,
+          level: level || 1
         })
       }
     >
