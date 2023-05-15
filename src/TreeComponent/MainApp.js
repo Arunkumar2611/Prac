@@ -4,8 +4,22 @@ import Form from './Form';
 import { findNodeOriginal } from './Helpers/findNodeOriginal';
 
 const MainApp = () => {
-    const [newData, setNewData] = React.useState([]); 
-    const [newDataaa, setNewDataaa] = React.useState([]);
+    const [newData, setNewData] = React.useState([
+      {
+        "name": "arun",
+        "children": [],
+        "parent": "rakesh",
+        "level": 1
+    }
+  ]); 
+    const [newDataaa, setNewDataaa] = React.useState([
+      {
+        "name": "arun",
+        "children": [],
+        "parent": "rakesh",
+        "level": 1
+    }
+    ]);
 
     function handleSubmitOriginal(event, incoming) {
         event.preventDefault();
@@ -38,6 +52,7 @@ const MainApp = () => {
         console.log("incoming", incoming);
     
         if (newData.length === 0) {
+          setNewData((oldData) => [...oldData, incoming]);
           setNewDataaa((oldData) => [...oldData, incoming]);
           console.log("%cFIRST COMPONENT", "color: orange", incoming);
         } else {
@@ -53,6 +68,8 @@ const MainApp = () => {
           // once found, we need to push the new node to the array of children of that parent node
           const newChild = findNodeOriginal(parent, incoming, currentData);
           setNewDataaa([newChild]);
+          setNewData([newChild]);
+          
         }
       }
 
@@ -72,7 +89,8 @@ const MainApp = () => {
         setNewDataaa(result)
       } 
 
-console.log("newData", newData, newDataaa);
+console.log("newData", newData);
+console.log("newDataaaa", newDataaa);
     return (
         <div>
             <h1>Tree</h1>
