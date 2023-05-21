@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import TreeDynamicData from "./TreeDynamicData";
 import Form from "./Form";
 import { findNodeOriginal } from "./Helpers/findNodeOriginal";
@@ -7,13 +7,15 @@ import { yellow } from "@mui/material/colors";
 const MainApp = () => {
   const [newData, setNewData] = React.useState([
     {
-      "logical": "",
-      "name": "a",
-      "children": [],
-      "parent": "b",
-      "fact": []
+      logical: "",
+      fact: [{ optionVal: "", operatorVal: "", valText: "" }],
+      name: "a",
+      children: [],
+      parent: "b",
     }
   ]);
+
+  const [DATA, SETDATA] = useState([])
 
   function findByIdRecursive(array, parent, data) {
     for (let index = 0; index < array.length; index++) {
@@ -40,32 +42,10 @@ const MainApp = () => {
   }
 
   const handleClick = (event, incoming) => {
-    // console.log(
-    //   "%cInside handler name: ",
-    //   "color: white; background:gray",
-    //   incoming.name
-    // );
-    // console.log(
-    //   "%cInside handler parent: ",
-    //   "color: white; background:gray",
-    //   incoming.parent
-    // );
-    // console.log(
-    //   "%cInside handler logical: ",
-    //   "color: white; background:gray",
-    //   incoming.logical
-    // );
-
-    // console.log("arun", incoming)
     let { parent } = incoming;
-    // console.log("incoming", incoming);
-
     if (newData.length === 0) {
       setNewData((oldData) => [...oldData, incoming]);
-      // console.log("%cFIRST COMPONENT", "color: orange", incoming);
     } else {
-      // console.log("adding a child");
-      // console.log("new Data------>", newData);
       let currentData = newData[0];
       if (!parent) {
         parent = currentData.name;
@@ -97,6 +77,9 @@ const MainApp = () => {
       <h1>Tree</h1>
       <TreeDynamicData
         dynamicData={newData}
+        DATA={DATA}
+        SETDATA={SETDATA}
+        setNewData={setNewData}
         handleClick={handleClick}
         recursiveRemove={recursiveRemove}
         handleFormChange={handleFormChange}

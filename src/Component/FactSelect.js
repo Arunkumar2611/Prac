@@ -15,19 +15,53 @@ const operatorOptions = [
 ];
 
 const FactSelect = (props) => {
-    const { fact, addFact, index, setAddFact } = props;
+    const { fact, item, index, dynamicData, setNewData, dIndex, overall } = props;
+    
+    const tp = (overall) => {
+        console.log("ssssss", overall)
+        for (let i = 0; i < overall.length; i++) {
+            const element = overall[i];
+            if(element.children.length === 0) {
+                element.fact.operatorVal = "sssssssssssssss";
+                console.log(element);
+                return element
+            } else {
+                tp(element.children)
+            }
+
+        }
+        return overall
+    }
+
+
+    const handleUpdate = (itemId, newName, array) => {
+        return array.map(item => {
+          if (item.parent === itemId) {
+            // If the current item matches the itemId, create a new object with the updated name
+            return { ...item, fact: {operatorVal: newName} };
+          } else if (item.children && item.children.length > 0) {
+            // If the current item has children, recursively call the function on the children
+            return { ...item, children: handleUpdate(itemId, newName, item.children) };
+          }
+          return item; // If no modifications are needed, return the original item
+        });
+      };
 
     const handleInputChange = (e) => {
         const { name, value } = e.target;
-        let newArr = [...addFact];
-        newArr[index][name] = value;
-        setAddFact(newArr);
+        let newArr = [...dynamicData]
+        console.log("ddddd",newArr, dIndex, index)
+        newArr[dIndex].fact[index][name] = value;
+        setNewData(newArr);
     };
 
     const handleDeleteFact = (index) => {
-        const list = [...addFact];
-        const remove = list.filter((_, indexFilter) => !(indexFilter === index));
-        setAddFact(remove);
+        const list = [...dynamicData];
+        console.log("list");
+        list[dIndex].fact = list[dIndex].fact.filter(
+        (_, indexfilter) => indexfilter !== index
+        );
+        setNewData(list);
     };
 
     return (
@@ -36,7 +70,7 @@ const FactSelect = (props) => {
                 sx={{ width: "100px", mr: 1 }}
                 size="small"
                 label=""
-                value={fact.optionVal}
+                value={item.fact[index].optionVal}
                 name={"optionVal"}
                 onChange={handleInputChange}
             >
@@ -50,7 +84,7 @@ const FactSelect = (props) => {
                 sx={{ width: "100px", mr: 1 }}
                 size="small"
                 label=""
-                value={fact.operatorVal}
+                value={item.fact[index].operatorVal}
                 name={"operatorVal"}
                 onChange={handleInputChange}
             >
@@ -64,7 +98,7 @@ const FactSelect = (props) => {
                 sx={{ width: "100px", mr: 1 }}
                 size="small"
                 label=""
-                value={fact.valText}
+                value={item.fact[index].valText}
                 name="valText"
                 variant="outlined"
                 onChange={handleInputChange}

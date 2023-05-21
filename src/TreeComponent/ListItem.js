@@ -21,32 +21,31 @@ const Item = styled(Paper)(({ theme }) => ({
 }));
 
 export default function ListItem(props) {
-  const { item, level, handleClick, recursiveRemove, handleFormChange } = props;
-  // console.log("%cInside Listitem", "color: purple", item, level);
-  const [subrule, setSubRule] = useState("AND");
-  const [addFact, setAddFact] = useState([
-    { optionVal: "", operatorVal: "", valText: "" },
-  ]);
+  const { item, level, handleClick, recursiveRemove, DATA, SETDATA, dynamicData, setNewData,dIndex } = props;
 
-  const handleAddFact = () => {
-    setAddFact([...addFact, { optionVal: "", operatorVal: "", valText: "" }]);
+  const handleAddArray = () => {
+    const updatedArray = dynamicData.map((obj) => {
+      if (obj.parent === item.parent) {
+        return {
+          ...obj,
+          fact: [...obj.fact, { optionVal: "", operatorVal: "", valText: "" }]
+        };
+      }
+      return obj;
+    });
+    setNewData(updatedArray);
   };
 
-  const handleLogicalChange = (event) => {
-    setSubRule(event.target.value);
-  };
+  // console.log("item", dynamicData);
+  console.log("DATA", DATA);
 
-  handleFormChange({
-    fact: addFact,
-    logical: subrule
-  }, item.parent)
-
-  // console.log("------logical : ", subrule);
-  // console.log("item.name : ", item.name);
-  // console.log("item.parent : ", item.parent);
-  // console.log("item.logical : ", item.logical);
-
-  console.log("addFact", addFact);
+  const handleLogicalChange = (e) => {
+    const { name, value } = e.target;
+    let newArr = [...dynamicData]
+    console.log("ddddd",newArr, dIndex)
+    newArr[dIndex][name] = value;
+    setNewData(newArr);
+  }
 
   return (
     <Box
@@ -61,25 +60,24 @@ export default function ListItem(props) {
         <Select
           size="small"
           name="logical"
-          value={subrule}
+          value={item.logical}
           onChange={handleLogicalChange}
         >
           <MenuItem value={"AND"}>AND</MenuItem>
           <MenuItem value={"OR"}>OR</MenuItem>
         </Select>
-        <Button variant="contained" onClick={handleAddFact}>
+        <Button variant="contained" onClick={handleAddArray}>
           Fact
         </Button>
         <Button
           variant="contained"
           onClick={(e) =>
             handleClick(e, {
-              // logical: subrule,
+              logical: "",
+              fact: [{ optionVal: "", operatorVal: "", valText: "" }],    
               name: item.parent + Math.floor(Math.random() * 100),
               children: [],
               parent: item.name || null,
-              level: level || 1,
-              // fact: addFact,
             })
           }
         >
@@ -98,17 +96,16 @@ export default function ListItem(props) {
         <Item>Parent: {item.parent}</Item>
         <Item>Level: {level}</Item>
 
-        {level === 0 && <Button sx={{ float: "right" }} variant="contained">
-          Save
-        </Button>}
       </Stack>
       <Box sx={{ mt: 2 }}>
-        {addFact.map((fact, index) => (
+        {item.fact.map((fact, index) => (
           <FactSelect
             fact={fact}
-            addFact={addFact}
+            item={item}
+            dIndex={dIndex}
+            dynamicData={dynamicData}
+            setNewData={setNewData}
             index={index}
-            setAddFact={setAddFact}
           />
         ))}
       </Box>
