@@ -77,6 +77,7 @@ const MainApp = () => {
       <h1>Tree</h1>
       <TreeDynamicData
         dynamicData={newData}
+        ORIGINALDATA={newData}
         DATA={DATA}
         SETDATA={SETDATA}
         setNewData={setNewData}

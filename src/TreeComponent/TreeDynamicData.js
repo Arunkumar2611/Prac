@@ -11,7 +11,8 @@ export default function TreeDynamicData(props) {
     handleClick,
     recursiveRemove,
     handleFormChange,
-    dIndex
+    dIndex,
+    ORIGINALDATA
   } = props;
   if (!dynamicData || !dynamicData.length) return null;
 
@@ -31,6 +32,7 @@ export default function TreeDynamicData(props) {
           <ListItem
             item={item}
             dIndex={dIndex}
+            ORIGINALDATA={ORIGINALDATA}
             dynamicData={dynamicData}
             level={level}
             DATA={DATA}
@@ -42,6 +44,7 @@ export default function TreeDynamicData(props) {
           />
           <TreeDynamicData
             dynamicData={item.children}
+            ORIGINALDATA={ORIGINALDATA}
             dIndex={dIndex}
             DATA={DATA}
             SETDATA={SETDATA}

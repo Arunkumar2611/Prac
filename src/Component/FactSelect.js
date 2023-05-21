@@ -15,44 +15,65 @@ const operatorOptions = [
 ];
 
 const FactSelect = (props) => {
-    const { fact, item, index, dynamicData, setNewData, dIndex, overall } = props;
-    
-    const tp = (overall) => {
-        console.log("ssssss", overall)
+    const {ORIGINALDATA, fact, item, index, dynamicData, setNewData, dIndex, overall } = props;
+
+    function deepComparison(first, second) {
+      /* Checking if the types and values of the two arguments are the same. */
+      if (first === second) return true;
+
+      /* Checking if any arguments are null */
+      if (first === null || second === null) return false;
+
+      /* Checking if any argument is none object */
+      if (typeof first !== "object" || typeof second !== "object") return false;
+
+      /* Using Object.getOwnPropertyNames() method to return the list of the objects’ properties */
+      let first_keys = Object.getOwnPropertyNames(first);
+
+      let second_keys = Object.getOwnPropertyNames(second);
+
+      /* Checking if the objects' length are same*/
+      if (first_keys.length !== second_keys.length) return false;
+
+      /* Iterating through all the properties of the first object with the for of method*/
+      for (let key of first_keys) {
+        /* Making sure that every property in the first object also exists in second object. */
+        if (!Object.hasOwn(second, key)) return false;
+
+        /* Using the deepComparison function recursively (calling itself) and passing the values of each property into it to check if they are equal. */
+        if (deepComparison(first[key], second[key]) === false) return false;
+      }
+      return true;
+    }
+
+
+    const tp = (overall, name, value) => {
+        // console.log("ssssss", overall)
         for (let i = 0; i < overall.length; i++) {
             const element = overall[i];
-            if(element.children.length === 0) {
-                element.fact.operatorVal = "sssssssssssssss";
+            if(element.parent === item.parent) {
+                element.fact[index][name] = value;
                 console.log(element);
                 return element
             } else {
-                tp(element.children)
+                tp(element.children, name, value)
             }
 
         }
         return overall
     }
 
-
-    const handleUpdate = (itemId, newName, array) => {
-        return array.map(item => {
-          if (item.parent === itemId) {
-            // If the current item matches the itemId, create a new object with the updated name
-            return { ...item, fact: {operatorVal: newName} };
-          } else if (item.children && item.children.length > 0) {
-            // If the current item has children, recursively call the function on the children
-            return { ...item, children: handleUpdate(itemId, newName, item.children) };
-          }
-          return item; // If no modifications are needed, return the original item
-        });
-      };
-
     const handleInputChange = (e) => {
         const { name, value } = e.target;
         let newArr = [...dynamicData]
         console.log("ddddd",newArr, dIndex, index)
         newArr[dIndex].fact[index][name] = value;
-        setNewData(newArr);
+        console.log("NEW ARRAY---", newArr)
+        const arr = [...ORIGINALDATA]
+        const kp = tp(arr, name, value)
+        console.log(deepComparison(arr, kp),"tp-- VLALUE------", kp)
+        console.log("EQUAL---", deepComparison(newArr, arr))
+        setNewData(arr);
     };
 
     const handleDeleteFact = (index) => {
@@ -63,6 +84,8 @@ const FactSelect = (props) => {
         );
         setNewData(list);
     };
+
+    console.log("ORIGINAL---", ORIGINALDATA);
 
     return (
         <Box p={1} sx={{ m: 1, border: "1px solid grey" }}>

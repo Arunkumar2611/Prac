@@ -21,7 +21,7 @@ const Item = styled(Paper)(({ theme }) => ({
 }));
 
 export default function ListItem(props) {
-  const { item, level, handleClick, recursiveRemove, DATA, SETDATA, dynamicData, setNewData,dIndex } = props;
+  const {ORIGINALDATA, item, level, handleClick, recursiveRemove, DATA, SETDATA, dynamicData, setNewData,dIndex } = props;
 
   const handleAddArray = () => {
     const updatedArray = dynamicData.map((obj) => {
@@ -103,6 +103,7 @@ export default function ListItem(props) {
             fact={fact}
             item={item}
             dIndex={dIndex}
+            ORIGINALDATA={ORIGINALDATA}
             dynamicData={dynamicData}
             setNewData={setNewData}
             index={index}
